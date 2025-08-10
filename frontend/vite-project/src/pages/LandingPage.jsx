@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { APP_FEATURES } from '../utils/data';
 import { LuSparkles } from 'react-icons/lu';
 import Modal from '../components/Modal';
+import SignUp from './Auth/SignUp';
+import Login from "./Auth/Login"
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -105,7 +107,7 @@ const LandingPage = () => {
         <div className='text-sm bg-gray-50 text-secondary text-center p-5 mt-5'>Happy Coding</div>
       </div>
 
-      <Modal 
+      <Modal
   isOpen={openAuthModal}
   onClose={() => {
     setOpenAuthModal(false);
