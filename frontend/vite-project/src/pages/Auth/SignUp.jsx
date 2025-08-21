@@ -3,6 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import Input from '../../components/Inputs/Input'
 import ProfilePhotoSelector from '../../components/Inputs/ProfilePhotoSelector'
 import { validateEmail } from '../../utils/helper'
+import { useContext } from 'react'
+import { UserContext } from '../../context/UserContext'
+import axiosInstance from '../../utils/axiosInstance'
+import { API_PATHS } from '../../utils/apiPaths'
+import uploadImage from '../../utils/uploadImage'
 
 const SignUp = ({setCurrentPage}) => {
 
@@ -13,6 +18,7 @@ const SignUp = ({setCurrentPage}) => {
 
   const [error, setError] = useState('')
 
+  const { updateUser}= useContext(UserContext)
   const navigate = useNavigate()
 
   // Handle Signup
@@ -42,7 +48,27 @@ const SignUp = ({setCurrentPage}) => {
     // signup Api calls 
 
     try {
-  // API call logic will go here
+  //Upload image if present 
+   if (profilePic) {
+  const imgUploadRes = await uploadImage(profilePic)   // ✅ fix
+  profileImageUrl = imgUploadRes.imageUrl || ""
+}
+
+     
+    const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
+      name: fullName,
+      email,
+      password,
+      profileImageUrl,
+    })
+
+    const { token} = response.data
+    if (token) {
+      localStorage.setItem("token", token)
+      updateUser(response.data)
+      navigate("/dashboard")
+    }
+
 } catch (error) {
   if (error.response && error.response.data.message) {
     setError(error.response.data.message)
